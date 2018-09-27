@@ -1,9 +1,9 @@
 <template>
     <div class="">
-      <common-table :data="tableData" :table-attr="{}" :events="{'row-click':rowClick}" :columns="tableColumns">
+      <common-table :data="tableData" :el-table-attr="{}" :el-table-events="{'row-click':rowClick}" :columns="tableColumns">
         <div slot="date" slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          <span style="margin-left: 10px">{{ scope.row.date | newCustomDateFilter("YYYY-MM-DD")}}</span>
         </div>
         <div slot="oper" slot-scope="scope">
           <el-button
@@ -11,6 +11,9 @@
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
+        </div>
+        <div slot="model" slot-scope="{row}">
+          <el-input v-model="row.name"></el-input>
         </div>
         <div slot="expand" slot-scope="scope">
           <div >
@@ -65,6 +68,9 @@ export default {
           slotName: "expand"
         },
         {
+          type: "selection",
+        },
+        {
           type: "index",
           label: "序号",
           align: "center",
@@ -73,20 +79,66 @@ export default {
         {
           prop: "date",
           label: "日期",
-          slotName: "date"
+          slotName: "date",
+          seq:6
         },
         {
           prop: "name",
           label: "姓名"
         },
         {
+          prop: "nameFilter",
+          label: "姓名[过滤]",
+          render:(h,{row})=>{
+            return(
+              <div>{ this.$options.filters.nameFilter(row.name)}</div>
+            )
+          }
+        },
+        {
           prop: "address",
           label: "地址"
         },
         {
+          prop: "edit",
+          label: "编辑",
+          width: "200",
+          slotName:'model',
+          trender:(h, { row }) => {
+            var self = this
+            return <div>
+            <input v-model={row.name}/>
+            </div>
+            return (
+              <div>
+                <el-input
+                  style="display: block"
+                  v-model={row.IsDeleted}
+                  active-color="#ff4949"
+                  inactive-color="#13ce66"
+                  active-text="已删除"
+                  inactive-text="未删除"
+                />
+              </div>
+            );
+          }
+        },
+        {
           prop: "oper",
           label: "操作",
-          slotName: "oper"
+          slotName: "oper",
+          render(h,scope){
+            return (
+              <div>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  onClick={()=>this.handleDelete(scope.$index, scope.row)}>删除
+                  { Vue.options.filters.newCustomDateFilter(scope.row.date,"YYYY-MM-DD")}
+                </el-button>
+              </div>
+            )
+          }
         }
       ]
     };
@@ -116,8 +168,15 @@ export default {
         });
     }
   },
+  filters:{
+    nameFilter(name){
+      return '[已通过]' + name
+    }
+  },
   components: {},
-  created() {}
+  created() {},
+  mounted(){
+  }
 };
 </script>
 <style lang="stylus" scoped>
