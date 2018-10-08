@@ -1,9 +1,10 @@
 <template>
     <div class="">
-      <common-table :data="tableData" :el-table-attr="{}" :el-table-events="{'row-click':rowClick}" :columns="tableColumns">
+      <el-main>
+      <vue-el-table :data="tableData" :el-table-attr="{}" :el-table-events="{'row-click':rowClick}" :columns="tableColumns">
         <div slot="date" slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.date | newCustomDateFilter("YYYY-MM-DD")}}</span>
+          <span style="margin-left: 10px">{{ scope.row.date }}</span>
         </div>
         <div slot="oper" slot-scope="scope">
           <el-button
@@ -29,13 +30,13 @@
             <span>{{ scope.row.address }}</span>
           </div>
         </div>
-      </common-table>
+      </vue-el-table>
+      </el-main>      
     </div>
 </template>
 <script>
-import { CommonTableMixin } from "@/assets/js/vueCommon.js";
+import vueElTable from '@/components/vue-el-table.vue';
 export default {
-  mixins: [CommonTableMixin],
   data() {
     return {
       tableData: [
@@ -104,37 +105,18 @@ export default {
           label: "编辑",
           width: "200",
           slotName:'model',
-          trender:(h, { row }) => {
-            var self = this
-            return <div>
-            <input v-model={row.name}/>
-            </div>
-            return (
-              <div>
-                <el-input
-                  style="display: block"
-                  v-model={row.IsDeleted}
-                  active-color="#ff4949"
-                  inactive-color="#13ce66"
-                  active-text="已删除"
-                  inactive-text="未删除"
-                />
-              </div>
-            );
-          }
         },
         {
           prop: "oper",
           label: "操作",
           slotName: "oper",
-          render(h,scope){
+          render:(h,scope)=>{
             return (
               <div>
                 <el-button
                   size="mini"
                   type="danger"
                   onClick={()=>this.handleDelete(scope.$index, scope.row)}>删除
-                  { Vue.options.filters.newCustomDateFilter(scope.row.date,"YYYY-MM-DD")}
                 </el-button>
               </div>
             )
@@ -173,11 +155,11 @@ export default {
       return '[已通过]' + name
     }
   },
-  components: {},
+  components: {vueElTable},
   created() {},
   mounted(){
   }
 };
 </script>
-<style lang="stylus" scoped>
+<style scoped>
 </style>

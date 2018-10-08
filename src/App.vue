@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <vue-el-table/>
+    <table-example/>
   </div>
 </template>
 
 <script>
-import VueElTable from '@/views/index'
-
+import tableExample from '@/views/example.vue';
 export default {
   name: 'App',
   components: {
-    VueElTable
+    tableExample
   }
 }
 </script>

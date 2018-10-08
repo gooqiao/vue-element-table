@@ -7,7 +7,7 @@
       <template v-for="(column,index) in computedColumns" >
         <el-table-column v-if="column.render" v-bind="column">
           <template slot-scope="scope">
-            <extend-dom :column="column" :$index="scope.$index" :render="column.render" :options="column.options" :row="scope.row"/>
+            <extend-dom :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
           </template>
         </el-table-column>
         <el-table-column v-else-if="column.slotName" v-bind="column" >
@@ -39,7 +39,9 @@
 // 3. filter请使用方法的形式调用
       // 全局filter请使用Vue.options.filters.xxx()或this.$root.$options.filters.xxx()
       // 组件的filter请使用this.$options.filters.xxx()
-import { getType } from '@/assets/js/util';
+const getType = function(obj){
+  return Object.prototype.toString.call(obj).slice(8, -1);
+}
 export default {
   props: {
     columns: { type: Array, required: true },
@@ -87,8 +89,8 @@ export default {
     extendDom:{
       functional:true,
       render(h,ctx){
-        let params = {...ctx.props,render : null}
-        return ctx.props.render(h,params)
+        let params = {...ctx.props}
+        return ctx.props.column.render.call(null,h,params)
       }
     }
   }
