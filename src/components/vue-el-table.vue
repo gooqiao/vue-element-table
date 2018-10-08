@@ -5,17 +5,13 @@
     v-on="elTableEvents"
     style="width: 100%">
       <template v-for="(column,index) in computedColumns" >
-        <el-table-column v-if="column.render" v-bind="column">
+        <el-table-column :key="setKey(column,index)" v-if="column.render||column.slotName" v-bind="column">
           <template slot-scope="scope">
-            <extend-dom :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
+            <extend-dom v-if="column.render" :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
+            <slot v-else :name="column.slotName" :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
           </template>
         </el-table-column>
-        <el-table-column v-else-if="column.slotName" v-bind="column" >
-          <template slot-scope="scope">
-            <slot :name="column.slotName" :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
-          </template>
-        </el-table-column>
-        <el-table-column v-else v-bind="column" >
+        <el-table-column :key="setKey(column,index)" v-else v-bind="column" >
         </el-table-column>
       </template>
     </el-table>
