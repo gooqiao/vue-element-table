@@ -1,8 +1,8 @@
 <template>
     <el-table
-    v-bind="elTableAttrs"
+    v-bind="$attrs"
     :data="data"
-    v-on="elTableEvents"
+    v-on="$listeners"
     style="width: 100%">
       <template v-for="(column,index) in computedColumns" >
         <el-table-column :key="setKey(column,index)" v-if="column.render||column.slotName" v-bind="column">
@@ -39,11 +39,11 @@ const getType = function(obj){
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
 export default {
+  inheritAttrs:false,
   props: {
     columns: { type: Array, required: true },
     data: { type: Array, required: true },
     elTableAttrs: { type: Object },
-    elTableEvents: Object,
     pagination: Object // TODO:
   },
   data() {

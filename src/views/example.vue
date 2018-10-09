@@ -1,7 +1,7 @@
 <template>
     <div class="">
       <el-main>
-      <vue-el-table :data="tableData" :el-table-attr="{}" :el-table-events="{'row-click':rowClick}" :columns="tableColumns">
+      <vue-el-table :data="tableData" @row-click="rowClick" :columns="tableColumns" highlight-current-row stripe >
         <div slot="date" slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -61,7 +61,6 @@ export default {
           address: "上海市普陀区金沙江路 1516 弄"
         }
       ],
-      tableAttr: { "highlight-current-row": true, stripe: true },
       rowClickNum: 0,
       tableColumns: [
         {
