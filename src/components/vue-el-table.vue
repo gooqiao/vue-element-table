@@ -42,7 +42,7 @@ export default {
   inheritAttrs:false,
   props: {
     columns: { type: Array, required: true },
-    data: { type: Array, required: true },
+    data: { type: Array | null, required: true },
     elTableAttrs: { type: Object },
     pagination: Object // TODO:
   },
