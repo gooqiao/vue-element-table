@@ -2,8 +2,8 @@
     <el-table
     v-bind="$attrs"
     :data="data"
-    v-on="$listeners"
-    style="width: 100%">
+    ref="elTable"
+    v-on="$listeners">
       <template v-for="(column,index) in computedColumns" >
         <el-table-column :key="setKey(column,index)" v-if="column.render||column.slotName" v-bind="column">
           <template slot-scope="scope">
@@ -11,9 +11,12 @@
             <slot v-else :name="column.slotName" :column="column" :$index="scope.$index" :options="column.options" :row="scope.row"/>
           </template>
         </el-table-column>
-        <el-table-column :key="setKey(column,index)" v-else v-bind="column" >
+        <el-table-column :key="setKey(column,index)" v-else v-bind="column" :formatter="column.formatter || cellFormatter">
         </el-table-column>
       </template>
+      <div slot="append" >
+        <slot name="append" />
+      </div>
     </el-table>
 </template>
 <script>
@@ -23,7 +26,7 @@
 // 2. 支持插槽
 // 3. 支持自定义顺序
 // 4. 支持原table任意属性和事件、支持原table-column任意属性。
-// 5. 支持原table方法。（暂缓）
+// 5. 支持原table方法。
 
 // 难点：
 // 1. 绑定原组件this。
@@ -35,6 +38,8 @@
 // 3. filter请使用方法的形式调用
       // 全局filter请使用Vue.options.filters.xxx()或this.$root.$options.filters.xxx()
       // 组件的filter请使用this.$options.filters.xxx()
+import { Table } from 'element-ui'
+
 const getType = function(obj){
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
@@ -74,12 +79,26 @@ export default {
     }
   },
   methods: {
+    cellFormatter(row,c,cellValue){
+      if(cellValue == undefined || cellValue === ""){
+        return '-'
+      }
+      return cellValue
+    },
     setKey(column, index) {
       let key = column.prop || column["column-key"] || column.key || index;
       return key;
     }
   },
   created() {
+  },
+  mounted(){
+    this.$nextTick(() => {
+      // proxy
+      Object.keys(Table.methods).forEach((item) => {
+        this[item] = this.$refs.elTable[item]
+      })
+    })
   },
   components: {
     extendDom:{
