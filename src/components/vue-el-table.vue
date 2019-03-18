@@ -30,14 +30,11 @@
 
 // 难点：
 // 1. 绑定原组件this。
-// 2. jsx 使用 filter 不能像template里一样
 
 // 注意点：
 // 1. jsx 要是用到组件实例this，需要自己维护。比如使用箭头函数。
-// 2. jsx 里无法 v-model，可以放插槽里
-// 3. filter请使用方法的形式调用
-      // 全局filter请使用Vue.options.filters.xxx()或this.$root.$options.filters.xxx()
-      // 组件的filter请使用this.$options.filters.xxx()
+// 2. jsx 使用 v-model，请安装babel-plugin-jsx-v-model
+// 3. filter请使用this.$options.filters.xxx()的形式调用
 import { Table } from 'element-ui'
 
 const getType = function(obj){
