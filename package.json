@@ -1,7 +1,7 @@
 {
-  "name": "gooqiao",
+  "name": "vue-jsx-element-table",
   "version": "1.0.0",
-  "description": "vue-element-table",
+  "description": "vue-jsx-element-table",
   "author": "pingmig88@gamil.com",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
